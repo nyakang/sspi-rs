@@ -1,0 +1,59 @@
+name: NyaTerm branch
+
+# Upstream's ci.yml only triggers on `master`, so nothing ran on this branch.
+#
+# This branch is manifest-only: it republishes upstream's content under the
+# version `ironrdp-connector` 0.10.0 pins. What matters is therefore not that the
+# crate builds in its own workspace, but that it still resolves the way NyaTerm
+# consumes it — as an external dependency alongside a stable aes-gcm, with one
+# version each of aes-gcm, picky and sspi in the graph.
+#
+# Triggers on this branch only, and lives in its own file rather than editing
+# upstream's workflow, so rebasing the patch series onto a newer upstream never
+# conflicts over CI configuration.
+
+on:
+  push:
+    branches: ["nyaterm"]
+  pull_request:
+    branches: ["nyaterm"]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  validate:
+    name: resolve as an external dependency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build a consumer that path-depends on this checkout
+        run: |
+          mkdir -p "$RUNNER_TEMP/consumer/src"
+          cd "$RUNNER_TEMP/consumer"
+          printf '%s\n' \
+            '[workspace]' \
+            '' \
+            '[package]' \
+            'name = "sspi-consumer"' \
+            'version = "0.0.0"' \
+            'edition = "2021"' \
+            '' \
+            '[dependencies]' \
+            "sspi = { path = \"$GITHUB_WORKSPACE\", default-features = false }" \
+            'aes-gcm = "0.11"' > Cargo.toml
+          echo 'fn main() {}' > src/main.rs
+          cargo check
+
+      - name: Assert one stable aes-gcm and one picky resolve
+        run: |
+          cd "$RUNNER_TEMP/consumer"
+          grep -A1 '^name = "aes-gcm"$' Cargo.lock
+          test "$(grep -c '^name = "aes-gcm"$' Cargo.lock)" = 1
+          # 0.11.x, not a prerelease: the point is that no `=0.11.0-rc` pin
+          # survives in the graph, not which patch release is current.
+          grep -A1 '^name = "aes-gcm"$' Cargo.lock | grep -qE '^version = "0\.11\.[0-9]+"$'
+          test "$(grep -c '^name = "picky"$' Cargo.lock)" = 1
+          test "$(grep -c '^name = "sspi"$' Cargo.lock)" = 1
