@@ -2,11 +2,9 @@ name: NyaTerm branch
 
 # Upstream's ci.yml only triggers on `master`, so nothing ran on this branch.
 #
-# This branch is manifest-only: it republishes upstream's content under the
-# version `ironrdp-connector` 0.10.0 pins. What matters is therefore not that the
-# crate builds in its own workspace, but that it still resolves the way NyaTerm
-# consumes it — as an external dependency alongside a stable aes-gcm, with one
-# version each of aes-gcm, picky and sspi in the graph.
+# This branch follows upstream's released SSPI line and adds a consumer-focused
+# resolution check for NyaTerm. Validate both the crate itself and the external
+# dependency graph used by IronRDP.
 #
 # Triggers on this branch only, and lives in its own file rather than editing
 # upstream's workflow, so rebasing the patch series onto a newer upstream never
@@ -28,6 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Check the SSPI crate
+        run: cargo check -p sspi
 
       - name: Build a consumer that path-depends on this checkout
         run: |
