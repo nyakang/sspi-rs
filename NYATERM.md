@@ -4,18 +4,13 @@ This branch is upstream `sspi` plus CI. It carries **no patch**.
 
 - Fork: <https://github.com/nyakang/sspi-rs>
 - Upstream: <https://github.com/Devolutions/sspi-rs>
-- Base revision: `4172abefd5c7502d92ba4544b77bd71fd182041f`
-  (`chore(release): prepare for publishing (#713)`, the `0.21.4` release content)
+- Base revision: `f73e31c8f988894a7b11eb03ae887e0fbc8f874b`
+  (`chore(release): recover sspi crate publication (#746)`, the `0.22.0` release)
 - Branch: `nyaterm`
 
-It exists because 0.21.4 was never published — crates.io stops at 0.21.3 — while
-NyaTerm wants what that commit carries: `847304f build(deps): move RustCrypto
-crates to stable and update picky (#712)`, which pins `picky = "=7.0.0-rc.26"` and
-removes the prerelease `p256`/`p384`/`p521`/zkcrypto/dalek pins that made this
-crate unresolvable next to a released `aes-gcm`, plus
-`4878c50 fix(auth_identity): accept `@` in down-level account names` and
-`6d17708 fix(kerberos): remove unnecessary sequence number incrementation` on the
-NLA path.
+The branch now follows the published 0.22 line. NyaTerm's IronRDP fork consumes
+`sspi = "0.22"` and adapts its CredSSP writer to the fallible
+`TsRequest::buffer_len` API introduced on this line.
 
 ## Patches
 
@@ -32,23 +27,9 @@ Three patches were dropped over two rebases:
   the NyaTerm graph already resolves. The same commit removed `crates/dpapi`'s
   `curve25519-dalek "=5.0.0-rc.1"` pin, so `cargo check -p sspi` works at the
   workspace root again.
-- `chore: publish 0.21.4's contents under version 0.21.0` — it existed only
-  because `ironrdp-connector` 0.10.0 declares `sspi = "=0.21.0"`, and a Cargo
-  `[patch]` replacement has to satisfy the original requirement. NyaTerm's IronRDP
-  fork now relaxes that to `sspi = "0.21"`, matching upstream, so the version can
-  stay where upstream put it.
-
-## Why the base is the release commit and not upstream's tip
-
-`master` is four commits further along, and one of them cannot be consumed:
-`a9dfaec refactor!: enable `as_conversions` lint (#721)` changes
-`credssp::TsRequest::buffer_len` from `-> u16` to `-> Result<u16>` across 63
-files. It landed *after* `4172abe` set the version to 0.21.4 and did not bump the
-version again, so upstream's tip is an unreleased breaking change sitting under a
-released version number. `ironrdp-connector`'s `write_credssp_request` still calls
-`usize::from(ts_request.buffer_len())`, on NyaTerm's fork *and* on IronRDP's own
-`master`, so taking the tip breaks the RDP client. Revisit when upstream releases
-that work under a version of its own and IronRDP adapts to it.
+- `chore: publish 0.21.4's contents under version 0.21.0` — it existed only to
+  satisfy an exact dependency in the older IronRDP baseline. Both upstream SSPI
+  and NyaTerm's IronRDP fork now use the released 0.22 API.
 
 ## Validation
 
@@ -68,7 +49,7 @@ aes-gcm = "0.11"
 ```
 
 `cargo check` on that package succeeds and its lock holds one version each of
-`aes-gcm` (0.11.x), `picky` (7.0.0-rc.26) and `sspi` (0.21.4), which is the point
+`aes-gcm` (0.11.x), `picky` (7.0.0-rc.26) and `sspi` (0.22.0), which is the point
 of pointing at this branch at all. `.github/workflows/nyaterm.yml` runs exactly
 that check.
 
