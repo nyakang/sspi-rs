@@ -4,8 +4,8 @@ This branch is upstream `sspi` plus CI. It carries **no patch**.
 
 - Fork: <https://github.com/nyakang/sspi-rs>
 - Upstream: <https://github.com/Devolutions/sspi-rs>
-- Base revision: `f73e31c8f988894a7b11eb03ae887e0fbc8f874b`
-  (`chore(release): recover sspi crate publication (#746)`, the `0.22.0` release)
+- Base revision: `c724a940763a115f4458195663aba69c49c20b4f`
+  (upstream `master` on 2026-10-01, the `0.22.1` line)
 - Branch: `nyaterm`
 
 The branch now follows the published 0.22 line. NyaTerm's IronRDP fork consumes
@@ -55,3 +55,13 @@ that check.
 
 Windows and macOS helper builds plus a manual NLA test remain part of the
 release matrix.
+
+## 2026-10-01 upstream merge
+
+Merged upstream 0.22.1 without conflicts; this fork still carries no library
+patch. The update includes Kerberos clock-skew/DER fixes and NTLM sealing-state
+preservation. Windows validation: `cargo check -p sspi` and
+`cargo test -p sspi --lib` (282 passed). The external consumer with a stable
+`aes-gcm = "0.11"` passed `cargo check`; its lockfile contains exactly one
+`aes-gcm` (0.11.1), `picky` (7.0.0-rc.26), and `sspi` (0.22.1). Upstream emits
+two existing unreachable-public-item warnings in `src/secret.rs`.
