@@ -326,7 +326,7 @@ pub fn generate_authenticator(options: GenerateAuthenticatorOptions<'_>) -> Resu
         if checksum_type == AUTHENTICATOR_CHECKSUM_TYPE
             && let Some(channel_bindings) = channel_bindings
         {
-            if checksum_value.len() < 20 {
+            let Some(channel_binding_buf) = checksum_value.get_mut(4..20) else {
                 return Err(Error::new(
                     ErrorKind::InvalidParameter,
                     format!(
@@ -334,10 +334,10 @@ pub fn generate_authenticator(options: GenerateAuthenticatorOptions<'_>) -> Resu
                         checksum_value.len()
                     ),
                 ));
-            }
+            };
             // [Authenticator Checksum](https://datatracker.ietf.org/doc/html/rfc4121#section-4.1.1)
             // 4..19 - Channel binding information (19 inclusive).
-            checksum_value[4..20].copy_from_slice(&compute_md5_channel_bindings_hash(channel_bindings)?);
+            channel_binding_buf.copy_from_slice(&compute_md5_channel_bindings_hash(channel_bindings)?);
         }
 
         for extension in extensions {
@@ -393,8 +393,8 @@ pub(super) fn generate_ap_rep(
             key_type: ExplicitContextTag0::from(IntegerAsn1::from(vec![encryption_type.into()])),
             key_value: ExplicitContextTag1::from(OctetStringAsn1::from(subkey.as_ref().clone())),
         }))),
-        // The client's `extract_seq_number_from_ap_rep` requires exactly 4 bytes (`u32::from_be_bytes`),
-        // so this must stay the full-width, non-minimized encoding — not `from_bytes_be_unsigned`,
+        // Older clients' `extract_seq_number_from_ap_rep` required exactly 4 bytes (`u32::from_be_bytes`),
+        // so this stays the full-width, non-minimized encoding — not `from_bytes_be_unsigned`,
         // which would strip it down to as little as one byte for small sequence numbers.
         seq_number: Optional::from(Some(ExplicitContextTag3::from(IntegerAsn1::from(
             seq_number.to_be_bytes().to_vec(),

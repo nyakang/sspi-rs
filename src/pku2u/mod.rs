@@ -45,7 +45,7 @@ use crate::kerberos::client::extractors::{
 };
 use crate::kerberos::client::generators::{
     ChecksumOptions, ChecksumValues, EncKey, GenerateAsReqOptions, GenerateAuthenticatorOptions, generate_ap_req,
-    generate_as_req, generate_as_req_kdc_body,
+    generate_as_req, generate_as_req_kdc_body, generate_nonce,
 };
 use crate::kerberos::{DEFAULT_ENCRYPTION_TYPE, EncryptionParams, RRC};
 use crate::pk_init::{
@@ -599,8 +599,8 @@ fn decrypt_sealed_wrap(
                 data.extend_from_slice(buffer.data());
             } else {
                 let end = plaintext_offset + buffer.buf_len();
-                if end <= plaintext.len() {
-                    data.extend_from_slice(&plaintext[plaintext_offset..end]);
+                if let Some(plaintext) = plaintext.get(plaintext_offset..end) {
+                    data.extend_from_slice(plaintext);
                     plaintext_offset = end;
                 }
             }
@@ -671,8 +671,8 @@ fn decrypt_integrity_only_wrap(
                 data.extend_from_slice(buffer.data());
             } else {
                 let end = plaintext_offset + buffer.buf_len();
-                if end <= plaintext.len() {
-                    data.extend_from_slice(&plaintext[plaintext_offset..end]);
+                if let Some(plaintext) = plaintext.get(plaintext_offset..end) {
+                    data.extend_from_slice(plaintext);
                     plaintext_offset = end;
                 }
             }
@@ -1146,7 +1146,7 @@ impl Pku2u {
 
                 let next_seq_number = self.next_seq_number();
                 let mut rng = StdRng::try_from_rng(&mut SysRng)?;
-                let request_nonce = rng.next_u32();
+                let request_nonce = generate_nonce(&mut rng);
                 let request_nonce_bytes = request_nonce.to_be_bytes();
                 self.request_nonce = Some(request_nonce);
                 let kdc_req_body = generate_as_req_kdc_body(&GenerateAsReqOptions {
