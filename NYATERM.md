@@ -1,16 +1,24 @@
 # NyaTerm fork notes
 
-This branch follows upstream SSPI 0.23.0 with a consumer dependency
+This branch follows upstream SSPI 0.23.1 with a consumer dependency
 compatibility patch and fork CI.
 
 - Fork: <https://github.com/nyakang/sspi-rs>
 - Upstream: <https://github.com/Devolutions/sspi-rs>
-- Base revision: `d87a57a7042cbefd1f794a9c3657b33d3cee8037` (upstream `master`, 2026-10-13)
+- Base revision: `1cd2febae1efebf5d7337e17ca410bee94ff97df` (fixed upstream target, 2026-11-03)
 - Branch: `nyaterm`
 
 NyaTerm's IronRDP fork consumes `sspi = "0.23"` and retains its fallible
 `TsRequest::buffer_len` handling. Details of previous releases below are
 historical; the 2026-10-13 section records current validation.
+
+## Current upstream sync (2026-11-03)
+
+Use upstream SSPI 0.23.1, picky 7.0.0-rc.27 and picky-krb 0.13.1. Upstream supersedes the older picky-krb minimum; retain picky-asn1-der 0.5.7 and picky-asn1-x509 0.15.5 minimums for existing consumer locks. The lockfile follows the new upstream crypto graph rather than retaining obsolete 0.13.0 entries.
+
+Windows: 451 library tests, package check and workspace fmt check passed. An external default-features=false consumer with stable aes-gcm 0.11 passed check and duplicate-graph inspection. Real NLA servers and macOS/Linux authentication were not exercised.
+
+Previous published revision: `d2b04e63ca9a72f2a70b456186e2472b27f0d45d`. Backup: `backup/nyaterm-20261103`. Older dated validation sections below describe historical baselines.
 
 ## Patches
 
