@@ -257,6 +257,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d2f6c7dbe95a6ed67ad9f18e57daf93a2f034c524b99fd2b76d18fdfeb6660aa"
 dependencies = [
  "hybrid-array",
+ "zeroize",
 ]
 
 [[package]]
@@ -497,9 +498,9 @@ checksum = "a31eee39dddec8330830986fcd7625edb5a24ec90ea038215273bbc3adb08ac6"
 
 [[package]]
 name = "crypto-bigint"
-version = "0.7.10"
+version = "0.7.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9c035cb64cba03dad2fb921f3e218785e8cf9a41790da5eb3a1400f62fa2be11"
+checksum = "914c195c4d7fbc5ed7f88d14cbf85914d5c664967658d43404b263913a477e82"
 dependencies = [
  "cpubits",
  "ctutils",
@@ -702,6 +703,7 @@ dependencies = [
  "const-oid",
  "crypto-common 0.2.2",
  "ctutils",
+ "zeroize",
 ]
 
 [[package]]
@@ -2013,9 +2015,8 @@ checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
 
 [[package]]
 name = "picky"
-version = "7.0.0-rc.27"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3bcf32b73bfc151bc07c3fbf35e729ad3078d48c581f8656c0f62a529fbf681c"
+version = "7.0.0-rc.29"
+source = "git+https://github.com/nyakang/picky-rs?rev=1977c9f86465e63966b69e4e6368064a33d32c8f#1977c9f86465e63966b69e4e6368064a33d32c8f"
 dependencies = [
  "base64 0.23.1",
  "crypto-bigint",
@@ -2047,8 +2048,7 @@ dependencies = [
 [[package]]
 name = "picky-asn1"
 version = "0.10.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f9e56b8955035e2593f7f7e7f8d30c9c7a0ce5a5e31cc529f8f087a9e0437526"
+source = "git+https://github.com/nyakang/picky-rs?rev=1977c9f86465e63966b69e4e6368064a33d32c8f#1977c9f86465e63966b69e4e6368064a33d32c8f"
 dependencies = [
  "oid",
  "serde",
@@ -2060,8 +2060,7 @@ dependencies = [
 [[package]]
 name = "picky-asn1-der"
 version = "0.5.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b4467118a2c640f4040aea27d01293620984b0b3f3ef0c53577c3bbf6bab4256"
+source = "git+https://github.com/nyakang/picky-rs?rev=1977c9f86465e63966b69e4e6368064a33d32c8f#1977c9f86465e63966b69e4e6368064a33d32c8f"
 dependencies = [
  "picky-asn1",
  "serde",
@@ -2071,8 +2070,7 @@ dependencies = [
 [[package]]
 name = "picky-asn1-x509"
 version = "0.15.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98dd311a5e525d1200365273a509b9d07bccf3481aaa901047fdca19830ca721"
+source = "git+https://github.com/nyakang/picky-rs?rev=1977c9f86465e63966b69e4e6368064a33d32c8f#1977c9f86465e63966b69e4e6368064a33d32c8f"
 dependencies = [
  "base64 0.23.1",
  "crypto-bigint",
@@ -2146,9 +2144,9 @@ checksum = "13bee6c73da26345c729282832b60b0363cf3dd9f4bfd81d8551b7a1c889a113"
 
 [[package]]
 name = "pkcs1"
-version = "0.8.0-rc.4"
+version = "0.8.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "986d2e952779af96ea048f160fd9194e1751b4faea78bcf3ceb456efe008088e"
+checksum = "6250dd7321adbe93d12b750aee0ced159fd13e77f625edcdf1cb6f83cd99f650"
 dependencies = [
  "der",
  "spki",
@@ -2583,17 +2581,20 @@ dependencies = [
 
 [[package]]
 name = "rsa"
-version = "0.10.0-rc.18"
+version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30b2aa4ba0d89f73d1e332df05be0eeab8840351c36ca5654341dfdb57bb3caf"
+checksum = "23e77fd77e0dea28b3011fd62d15445b7de7959333b0276d930e03be0f755699"
 dependencies = [
  "const-oid",
  "crypto-bigint",
+ "crypto-common 0.2.2",
  "crypto-primes",
  "digest 0.11.3",
+ "hmac",
  "pkcs1",
  "pkcs8",
  "rand_core 0.10.1",
+ "sha2",
  "signature",
  "spki",
  "zeroize",

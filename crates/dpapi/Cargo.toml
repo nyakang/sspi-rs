@@ -58,8 +58,8 @@ getrandom = "0.4"
 
 # Pin transitive dependencies
 # TODO: Remove when stable versions will be released
-pkcs1 = "=0.8.0-rc.4"
-rsa = { version = "=0.10.0-rc.18", default-features = false }
+pkcs1 = "0.8"
+rsa = { version = "0.10", default-features = false }
 
 [dev-dependencies]
 paste = "1.0"

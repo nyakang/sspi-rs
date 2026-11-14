@@ -1,5 +1,18 @@
 # NyaTerm fork notes
 
+## Current upstream sync (2026-11-14)
+
+- Upstream base: `2f447436fe6ff696aab9284bd18ab5f6410de5c1` (`https://github.com/Devolutions/sspi-rs`, `master`).
+- Previous published revision: `582bd37e355d710a0888faded5f4f6da4667c3c8`.
+- Preserved backup: `backup/nyaterm-20261114`; branch: `nyaterm`.
+
+Retain the ASN.1 minimums and drop the obsolete lock-only patch already superseded upstream. Upgrade Picky to rc29 and RSA/PKCS1 to stable releases so current russh remains on its hardened crypto graph. Adapt winscard key names. Pin Picky and all three ASN.1 crates together in the root patch table; external consumers must carry these same patches. The standalone consumer CI copies this patch table.
+
+Windows, Rust 1.99.1: cargo test -p sspi -p winscard --lib passed (499 SSPI and 14 winscard tests) with the compatible Picky sources. Standalone Git-source check and an external default-features=false consumer with a single stable aes-gcm 0.11 passed. Combined NyaTerm workspace check passed. Real NLA/smartcard endpoints and other operating systems remain untested.
+
+Earlier dated sections below describe historical revisions and validation.
+
+
 This branch follows upstream SSPI 0.23.1 with a consumer dependency
 compatibility patch and fork CI.
 
