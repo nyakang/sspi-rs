@@ -45,6 +45,8 @@ jobs:
             '[dependencies]' \
             "sspi = { path = \"$GITHUB_WORKSPACE\", default-features = false }" \
             'aes-gcm = "0.11"' > Cargo.toml
+          # External consumers must share the same Picky and ASN.1 source graph.
+          sed -n '/^\[patch.crates-io\]$/,$p' "$GITHUB_WORKSPACE/Cargo.toml" >> Cargo.toml
           echo 'fn main() {}' > src/main.rs
           cargo check
 

@@ -9,7 +9,7 @@ use iso7816::{Aid, Command, Instruction};
 use iso7816_tlv::ber::{Tag, Tlv, Value};
 use picky::key::PrivateKey;
 use rsa::traits::PublicKeyParts;
-use rsa::{Pkcs1v15Sign, RsaPrivateKey};
+use rsa::{Pkcs1v15Sign, PrivateKey as RsaPrivateKey};
 use secret::{Secret, SecretPrivateKey};
 use sha1::Sha1;
 use uuid::Uuid;
