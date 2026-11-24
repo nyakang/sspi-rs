@@ -1,5 +1,15 @@
 # NyaTerm fork notes
 
+## Upstream synchronization (2026-11-25)
+
+- Upstream base: `2cecf7f2da2e6a18cb4c38fe2cba18f7b9eb3dc2` (Devolutions/sspi-rs, master).
+- Previous published head: `df7ce588457cad66e6f3d0a46b3e35a86eec281b`.
+- Preserved remote backup: `backup/nyaterm-20261125-df7ce588`.
+
+Retain stable RSA/Picky dependencies and upstream KDC certificate checks. Keep the new optional base64 dependency in the FFI crate while preserving Picky rc29.
+
+Linux x86_64, Rust 1.99.1: cargo test -p sspi --lib passed 504 tests; package library Clippy and workspace formatting checks passed. Real KDC and Windows/macOS authentication were not exercised.
+
 ## Current upstream sync (2026-11-14)
 
 - Upstream base: `2f447436fe6ff696aab9284bd18ab5f6410de5c1` (`https://github.com/Devolutions/sspi-rs`, `master`).
